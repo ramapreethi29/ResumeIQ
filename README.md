@@ -1,17 +1,17 @@
-# 💰 Finance RAG Advisor — Source-Grounded Financial Document Assistant
+# 📄 AI Resume Match Analyzer — Resume-to-Job Description Matching Assistant
 
 <div align="center">
 
 ![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge\&logo=python\&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688?style=for-the-badge\&logo=fastapi\&logoColor=white)
 ![React](https://img.shields.io/badge/React-Frontend-61DAFB?style=for-the-badge\&logo=react\&logoColor=black)
-![ChromaDB](https://img.shields.io/badge/ChromaDB-Vector%20Database-5B21B6?style=for-the-badge)
+![Vite](https://img.shields.io/badge/Vite-Frontend%20Build-646CFF?style=for-the-badge\&logo=vite\&logoColor=white)
 ![Gemini](https://img.shields.io/badge/Gemini-LLM-4285F4?style=for-the-badge\&logo=google\&logoColor=white)
-![RAG](https://img.shields.io/badge/RAG-Retrieval%20Augmented%20Generation-FF6F00?style=for-the-badge)
+![PDF](https://img.shields.io/badge/PDF-Resume%20Parsing-B91C1C?style=for-the-badge)
 
-**A full-stack RAG-based financial document assistant that lets users upload finance PDFs, perform semantic search, and generate source-grounded answers using FastAPI, React, ChromaDB, sentence-transformers, and Gemini.**
+**A full-stack AI career assistant that compares a resume PDF against a target job description and generates a structured match score, strong matches, missing skills, ATS keywords, resume improvement suggestions, and improved resume bullets.**
 
-[🚀 Quick Start](#-quick-start) · [🧠 Architecture](#-rag-architecture) · [🌐 Frontend](#-web-application) · [🔌 API](#-api-endpoints) · [📸 Screenshots](#-screenshots)
+[🚀 Quick Start](#-quick-start) · [🧠 Architecture](#-system-architecture) · [🌐 Frontend](#-web-application) · [🔌 API](#-api-endpoints) · [📸 Screenshots](#-screenshots)
 
 </div>
 
@@ -19,152 +19,146 @@
 
 ## 📌 Overview
 
-Finance RAG Advisor is a full-stack AI application built to answer questions from uploaded finance-related PDF documents using Retrieval-Augmented Generation (RAG).
+AI Resume Match Analyzer is a full-stack AI application built to help candidates evaluate how well their resume matches a specific job description.
 
-Instead of relying only on the general knowledge of a language model, the system first extracts text from uploaded PDFs, splits the content into chunks, creates semantic embeddings, stores them in ChromaDB, retrieves the most relevant chunks for a user question, and then uses Gemini to generate a source-grounded response.
+The application allows users to upload a PDF resume, paste a target job description, and receive a structured AI-generated analysis. The system extracts readable text from the resume, combines it with the job description, sends it through a carefully designed Gemini prompt, and returns recruiter-friendly feedback.
 
-The project focuses on building a practical AI document assistant with transparent retrieval, source visibility, fallback behavior, and a clean React frontend.
+The project focuses on practical career workflows such as resume screening, ATS keyword matching, skill gap identification, and role-specific resume improvement — while avoiding exaggerated or fabricated experience.
 
-> **Key Idea:** The model should answer from the uploaded document context, not from unsupported assumptions.
+> **Key Idea:** The AI should improve how the resume is presented, not invent experience that the candidate does not actually have.
 
 ---
 
 ## 🎯 Why I Built This
 
-I built this project to understand how production-style AI applications answer questions from domain-specific documents.
+I built this project to understand how AI can assist with real-world career workflows such as resume screening, job matching, and resume optimization.
 
 The main goal was to explore:
 
-* PDF ingestion and text extraction
-* Text chunking for retrieval
-* Embedding generation using `sentence-transformers`
-* Vector storage and semantic search using ChromaDB
-* Source-grounded answer generation using Gemini
-* API fallback handling when LLM generation is unavailable
-* Full-stack integration between FastAPI and React
+* Resume PDF parsing
+* Job description analysis
+* Prompt engineering for structured career feedback
+* ATS keyword extraction
+* Skill gap identification
+* Guardrails against exaggerated resume claims
+* Frontend-backend integration using FastAPI and React
 
-This project helped me understand that RAG quality depends heavily on retrieval quality, chunking strategy, and prompt design — not only on the LLM.
+This project helped me understand how AI applications can be designed for practical decision support rather than generic chatbot-style responses.
 
 ---
 
 ## ✨ Features
 
-* 📄 Upload finance-related PDF documents
-* 🧾 Extract readable text using `pypdf`
-* ✂️ Split PDF content into searchable chunks
-* 🧠 Generate embeddings using `sentence-transformers`
-* 🗄️ Store document chunks in ChromaDB
-* 🔍 Perform semantic search using natural language queries
-* 🤖 Generate source-grounded answers using Gemini
-* 📌 Display source chunks used for each answer
-* 🔁 Reset indexed documents during testing
-* 🛡️ Fallback retrieval mode when Gemini is unavailable or quota-limited
-* 🌐 React frontend for upload, question answering, sources, and reset flow
-* 🔗 CORS-enabled frontend-backend integration for local development
+* 📄 Upload resume PDF
+* 🧾 Extract readable resume text using `pypdf`
+* 📝 Paste a target job description
+* 🤖 Analyze resume-to-job description fit using Gemini
+* 📊 Generate an overall match score
+* ✅ Identify strong matches between resume and JD
+* ⚠️ Detect missing or weak areas
+* 🔍 Suggest ATS keywords only if genuinely applicable
+* 🛠️ Provide resume improvement suggestions
+* ✍️ Rewrite improved resume bullets without exaggerating experience
+* 🧭 Provide final recommendation: apply now, apply after edits, or build more evidence
+* 🌐 React frontend for resume upload, JD input, and result display
+* 🔗 CORS-enabled frontend-backend integration
 
 ---
 
-## 🧠 RAG Architecture
+## 🧠 System Architecture
 
 ```text
-PDF Upload
+Resume PDF Upload
    │
    ▼
-Text Extraction using pypdf
+Resume Text Extraction using pypdf
    │
    ▼
-Text Chunking
+Job Description Input
    │
    ▼
-Embedding Generation using sentence-transformers
+Prompt Construction with Guardrails
    │
    ▼
-ChromaDB Vector Storage
+Gemini Resume-JD Analysis
    │
    ▼
-Semantic Retrieval
+Structured Output:
+Match Score + Strong Matches + Missing Skills
+ATS Keywords + Improved Bullets + Final Recommendation
    │
    ▼
-Gemini Prompt with Retrieved Context
-   │
-   ▼
-Source-Grounded Answer + Source Chunks
+Frontend Result Display
 ```
 
-### Core RAG Flow
+### Core Analysis Flow
 
-| Stage             | Component             | Purpose                                        |
-| ----------------- | --------------------- | ---------------------------------------------- |
-| PDF Upload        | FastAPI               | Accept finance-related PDF documents           |
-| Text Extraction   | pypdf                 | Extract readable text from uploaded PDFs       |
-| Chunking          | Custom splitter       | Break large text into retrievable chunks       |
-| Embeddings        | sentence-transformers | Convert text chunks into vector embeddings     |
-| Vector Storage    | ChromaDB              | Store and retrieve semantically similar chunks |
-| Retrieval         | ChromaDB query        | Fetch top relevant document chunks             |
-| Answer Generation | Gemini                | Generate answer using retrieved context        |
-| Frontend Display  | React                 | Show answer and source chunks to user          |
+| Stage            | Component            | Purpose                                       |
+| ---------------- | -------------------- | --------------------------------------------- |
+| Resume Upload    | React + FastAPI      | Accept PDF resume from user                   |
+| Text Extraction  | pypdf                | Extract readable text from the resume         |
+| JD Input         | React textarea       | Accept target job description                 |
+| Prompt Design    | Custom Gemini prompt | Structure the analysis with strict guardrails |
+| AI Analysis      | Gemini API           | Generate resume-JD match feedback             |
+| API Response     | FastAPI              | Return structured analysis result             |
+| Frontend Display | React                | Show the complete analysis clearly            |
 
 ---
 
 ## 🌐 Web Application
 
-The React frontend provides a simple interface for testing the complete RAG workflow.
+The React frontend provides a simple interface for testing the complete workflow.
 
 ### Frontend Capabilities
 
-* Upload a PDF document
-* Ask natural language questions
-* View AI-generated answers
-* View source chunks used for the answer
-* Reset indexed document data during testing
-* Display success and error states clearly
+* Upload a PDF resume
+* Paste a job description
+* Submit resume and JD for analysis
+* View match score and reasoning
+* View strong matches and missing skills
+* View ATS keyword suggestions
+* View improved resume bullets
+* Clear inputs and test another job description
 
 ---
 
 ## 🔌 API Endpoints
 
-| Method | Endpoint           | Purpose                           |
-| ------ | ------------------ | --------------------------------- |
-| GET    | `/health`          | Check backend health              |
-| POST   | `/upload`          | Upload and index a PDF            |
-| POST   | `/search`          | Retrieve relevant document chunks |
-| POST   | `/ask`             | Ask a source-grounded question    |
-| DELETE | `/documents/reset` | Reset indexed documents           |
+| Method | Endpoint   | Purpose                                    |
+| ------ | ---------- | ------------------------------------------ |
+| GET    | `/health`  | Check backend health                       |
+| POST   | `/analyze` | Analyze resume PDF against job description |
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Layer                  | Technology            |
-| ---------------------- | --------------------- |
-| Backend                | FastAPI, Uvicorn      |
-| Frontend               | React, Vite           |
-| LLM                    | Gemini API            |
-| Embeddings             | sentence-transformers |
-| Vector Database        | ChromaDB              |
-| PDF Processing         | pypdf                 |
-| Environment Management | python-dotenv         |
-| Language               | Python, JavaScript    |
+| Layer                  | Technology          |
+| ---------------------- | ------------------- |
+| Backend                | FastAPI, Uvicorn    |
+| Frontend               | React, Vite         |
+| LLM                    | Gemini API          |
+| PDF Processing         | pypdf               |
+| Environment Management | python-dotenv       |
+| Data Format            | Multipart form data |
+| Language               | Python, JavaScript  |
 
 ---
 
 ## 📁 Project Structure
 
 ```text
-Finance-rag-advisor/
+AI-Resume-Match-Analyzer/
 │
 ├── backend/
 │   ├── app/
-│   │   ├── main.py              # FastAPI routes and middleware
+│   │   ├── main.py              # FastAPI routes, upload handling, CORS
 │   │   ├── config.py            # Environment and app configuration
-│   │   ├── pdf_loader.py        # PDF text extraction
-│   │   ├── text_splitter.py     # Document chunking logic
-│   │   ├── vector_store.py      # ChromaDB storage and retrieval
-│   │   ├── rag_pipeline.py      # Gemini prompt and RAG answer generation
-│   │   └── schemas.py           # Pydantic request/response schemas
+│   │   ├── pdf_loader.py        # Resume PDF text extraction
+│   │   ├── resume_analyzer.py   # Gemini prompt and analysis logic
+│   │   └── schemas.py           # Pydantic response schemas
 │   │
-│   ├── uploads/                 # Local uploaded PDFs ignored by Git
-│   ├── chroma_db/               # Local ChromaDB storage ignored by Git
+│   ├── uploads/                 # Local uploaded resumes ignored by Git
 │   ├── requirements.txt
 │   ├── .env.example
 │   └── .gitignore
@@ -180,12 +174,11 @@ Finance-rag-advisor/
 │   └── vite.config.js
 │
 ├── screenshots/
-│   ├── frontend-upload-success.png
-│   ├── frontend-answer-with-sources.png
-│   ├── health-check-success.png
-│   ├── upload-success.png
-│   ├── semantic-search-sip.png
-│   └── reset-vector-database.png
+│   ├── backend-health-check.png
+│   ├── backend-analyze-success.png
+│   ├── frontend-form-filled.png
+│   ├── frontend-analysis-score.png
+│   └── frontend-improved-bullets.png
 │
 ├── README.md
 └── .gitignore
@@ -207,8 +200,8 @@ Finance-rag-advisor/
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/aadi090204/Finance-rag-advisor.git
-cd Finance-rag-advisor
+git clone https://github.com/aadi090204/AI-Resume-Match-Analyzer.git
+cd AI-Resume-Match-Analyzer
 ```
 
 ---
@@ -259,7 +252,7 @@ http://127.0.0.1:8000/docs
 Open a new terminal and go to the frontend folder:
 
 ```bash
-cd Finance-rag-advisor/frontend
+cd AI-Resume-Match-Analyzer/frontend
 ```
 
 Install frontend dependencies:
@@ -282,119 +275,98 @@ http://localhost:5173
 
 ---
 
-## 💬 Example Questions
+## 🧪 Sample Job Description Used for Testing
 
-After uploading a finance-related PDF, try questions such as:
-
-```json
-{
-  "question": "What is an emergency fund and why is it important?"
-}
-```
-
-```json
-{
-  "question": "What does the document say about SIP?"
-}
-```
-
-```json
-{
-  "question": "What investment risks are mentioned?"
-}
+```text
+We are hiring a Junior DevOps Engineer with hands-on knowledge of Linux, Docker, Docker Compose, CI/CD pipelines, GitHub Actions, Nginx, cloud fundamentals, monitoring, and troubleshooting. The candidate should be able to work with deployment workflows, analyze logs, debug production issues, understand basic networking, and collaborate with engineering teams. Exposure to Prometheus, Grafana, AWS, Kubernetes, Terraform, or Ansible is a plus.
 ```
 
 ---
 
 ## 📸 Screenshots
 
-### Frontend Upload Flow
+### Backend Health Check
 
-![Frontend Upload](screenshots/frontend-upload-success.png)
+![Backend Health Check](screenshots/backend-health-check.png)
 
-### Frontend Source-Grounded Answer
+### Backend Analyze API
 
-![Frontend Answer](screenshots/frontend-answer-with-sources.png)
+![Backend Analyze](screenshots/backend-analyze-success.png)
 
-### API Health Check
+### Frontend Resume Analysis Form
 
-![Health Check](screenshots/health-check-success.png)
+![Frontend Form](screenshots/frontend-form-filled.png)
 
-### API PDF Upload
+### Match Score and Skill Gap Analysis
 
-![PDF Upload](screenshots/upload-success.png)
+![Match Score](screenshots/frontend-analysis-score.png)
 
-### API Semantic Search
+### Resume Improvement Suggestions
 
-![Semantic Search](screenshots/semantic-search-sip.png)
-
-### API Reset Vector Database
-
-![Reset Vector Database](screenshots/reset-vector-database.png)
+![Improved Bullets](screenshots/frontend-improved-bullets.png)
 
 ---
 
 ## ⚠️ What Went Wrong
 
-While building the project, I ran into a few practical issues:
+While building the project, I had to handle a few practical issues:
 
-1. The first Gemini model name used was not available for the configured API version.
-2. Another Gemini model returned a quota error, so the backend needed fallback handling.
-3. Raw character-based chunking sometimes split sentences awkwardly.
-4. PDF extraction quality depended on whether the uploaded PDF contained real text or scanned images.
-5. Retrieval and generation needed to be tested separately to debug answer quality.
+1. The resume analysis output initially suggested fake placeholders like `X%` and `Y minutes`.
+2. The AI prompt needed stricter rules to avoid exaggerated resume claims.
+3. The browser frontend required CORS configuration to communicate with the FastAPI backend.
+4. Resume PDF extraction depends on whether the uploaded PDF contains readable text.
+5. Very short job descriptions produced less useful analysis, so realistic JD input was needed for better results.
 
 ---
 
 ## ✅ How I Fixed It
 
-* Added error handling around Gemini answer generation.
-* Added fallback retrieval mode that returns relevant source chunks if LLM generation fails.
-* Added a `/search` endpoint to debug retrieval separately from answer generation.
-* Added `/documents/reset` to clear indexed data during testing.
-* Added source chunk references to make answers more transparent.
-* Added CORS middleware so the React frontend can communicate with the FastAPI backend.
+* Added prompt rules to prevent fake metrics and exaggerated experience.
+* Updated improved bullet instructions to avoid numbers unless clearly present in the resume.
+* Added CORS middleware in FastAPI for local frontend-backend integration.
+* Added validation for PDF uploads and empty job descriptions.
+* Used structured output sections to make the analysis recruiter-friendly.
+* Tested the app with a realistic Junior DevOps Engineer job description.
 
 ---
 
 ## 📚 What I Learned
 
-* RAG quality depends heavily on retrieval quality, not only on the LLM.
-* Chunking strategy affects how accurately relevant information is retrieved.
-* A separate semantic search endpoint makes debugging easier.
-* LLM APIs can fail due to quota, model availability, or provider changes.
-* Fallback behavior is important for AI applications.
-* Source-grounded answers are more trustworthy than generic chatbot responses.
-* Full-stack AI applications need clean API contracts between backend and frontend.
+* AI resume analysis needs strict guardrails to avoid inventing experience.
+* Prompt design directly affects output quality and trustworthiness.
+* PDF parsing is simple for text-based resumes but may fail for scanned resumes.
+* Full-stack AI apps need clean API contracts between frontend and backend.
+* Career-focused AI tools can be built with practical workflows instead of generic chatbot interfaces.
+* AI-generated resume feedback is more useful when the output is structured around recruiter decision points.
 
 ---
 
 ## 🗺️ Future Work
 
-* [ ] Improve chunking using paragraph-aware or sentence-aware splitting
-* [ ] Add document deletion by filename
-* [ ] Add support for multiple uploaded documents with document-level filtering
-* [ ] Add authentication for uploaded documents
-* [ ] Add downloadable answer reports
+* [ ] Add support for DOCX resumes
+* [ ] Add downloadable analysis report
+* [ ] Add structured JSON output from Gemini
+* [ ] Add resume section-wise scoring
+* [ ] Add multiple job description comparison
+* [ ] Add authentication and user analysis history
+* [ ] Deploy frontend and backend
 * [ ] Add Dockerfile and Docker Compose after local Docker testing
-* [ ] Deploy backend and frontend with environment-based configuration
-* [ ] Add Prometheus metrics for request latency and error count
-* [ ] Add evaluation dataset for testing answer quality
-* [ ] Add support for multiple LLM providers
+* [ ] Add role-specific analysis modes such as DevOps, Software Engineer, Data Analyst, and AI Engineer
 
 ---
 
 ## 🔐 Security Notes
 
 * The `.env` file is ignored by Git and should never be committed.
-* Uploaded PDFs are stored locally only during development.
-* The app should not be used with sensitive financial documents unless proper authentication, encryption, and storage controls are added.
+* Uploaded resumes are stored locally only during development.
+* The app should not be used with sensitive personal resumes in production unless authentication, encryption, and secure storage are added.
+* AI suggestions should be reviewed manually before updating a real resume.
 
 ---
 
 ## 📄 Disclaimer
 
-This project is for educational and portfolio purposes only. It does not provide investment advice, financial planning advice, or product recommendations. Answers are generated from uploaded document context and may still require human verification.
+This project is for educational and portfolio purposes only. The analysis should be treated as AI-assisted feedback, not as a guaranteed hiring outcome. The system does not guarantee ATS selection, interview calls, or job offers.
 
 ---
 
@@ -407,5 +379,5 @@ GitHub: [aadi090204](https://github.com/aadi090204)
 ---
 
 <div align="center">
-<i>Built as a full-stack AI portfolio project exploring RAG, semantic search, vector databases, and source-grounded financial document question answering.</i>
+<i>Built as a full-stack AI project exploring resume parsing, prompt engineering, ATS-style keyword analysis, and career-focused AI assistance.</i>
 </div>
