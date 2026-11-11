@@ -1,28 +1,35 @@
-# Environment files
-.env
-**/.env
-*.env
-
-# Python virtual environment
-venv/
-backend/venv/
-**/venv/
-
-# Python cache
+# Python
 __pycache__/
-**/__pycache__/
-*.pyc
+*.py[cod]
+.venv/
+venv/
 
-# Uploaded files
-backend/uploads/
+# Secrets
+.env
+.env.*
+
+# Local data
+cache/
 uploads/
+*.db
+*.sqlite3
+matching_results.json
+
+# Excluded backend files
+backend/app/config.py
+backend/app/resume_analyzer.py
+backend/app/test_*.py
+backend/test_*.py
 
 # Frontend
+node_modules/
 frontend/node_modules/
 frontend/dist/
 
-# OS/editor files
+# IDE
 .vscode/
-.DS_Store
-desktop.ini
-Thumbs.db
+.idea/
+backend/.gitignore
+backend/sample_resume.txt
+copy.txt
+test_education.py
